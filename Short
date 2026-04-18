@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>مختصر روابط الجوال</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 16px;
+            margin: 0;
+        }
+        .app {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            overflow: hidden;
+            padding: 24px 20px 30px;
+        }
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .subhead {
+            color: #64748b;
+            margin-bottom: 24px;
+            font-size: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 16px;
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 40px;
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            font-weight: 600;
+            border-radius: 32px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #334155;
+            font-size: 16px;
+            background: transparent;
+            border: none;
+        }
+        .tab.active {
+            background: white;
+            color: #0f172a;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .panel {
+            display: none;
+        }
+        .panel.active {
+            display: block;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: 500;
+            margin-bottom: 6px;
+            display: block;
+            color: #1e293b;
+        }
+        input {
+            width: 100%;
+            padding: 16px 18px;
+            font-size: 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 20px;
+            background: white;
+            transition: border 0.15s;
+            font-family: inherit;
+        }
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        .btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 60px;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 8px;
+            box-shadow: 0 6px 14px rgba(59,130,246,0.25);
+        }
+        .btn:active {
+            background: #2563eb;
+        }
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #1e293b;
+            box-shadow: none;
+            margin-top: 12px;
+        }
+        .result-box {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 18px;
+            margin: 20px 0 8px;
+            border: 1px dashed #cbd5e1;
+        }
+        .short-link {
+            font-family: 'SF Mono', 'Courier New', monospace;
+            font-size: 18px;
+            background: white;
+            padding: 14px 16px;
+            border-radius: 18px;
+            word-break: break-all;
+            margin: 12px 0 8px;
+            border: 1px solid #e2e8f0;
+            user-select: all;
+        }
+        .copy-btn {
+            background: #ffffff;
+            border: 1.5px solid #3b82f6;
+            color: #3b82f6;
+            padding: 10px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.1s;
+            margin-top: 6px;
+            width: auto;
+            display: inline-block;
+        }
+        .copy-btn:active {
+            background: #3b82f6;
+            color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+        th {
+            text-align: right;
+            padding: 14px 4px 8px 4px;
+            color: #64748b;
+            font-weight: 500;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        td {
+            padding: 12px 4px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+        .link-code {
+            font-family: monospace;
+            background: #f1f5f9;
+            padding: 6px 8px;
+            border-radius: 30px;
+            font-size: 14px;
+            display: inline-block;
+        }
+        .url-preview {
+            max-width: 160px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            direction: ltr;
+            text-align: left;
+            color: #2563eb;
+        }
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+        .empty-message {
+            text-align: center;
+            color: #94a3b8;
+            padding: 30px 0;
+        }
+        .footer-note {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #94a3b8;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <h1>🔗 مُختصر</h1>
+    <div class="subhead">روابطك · تتبع النقرات · يعمل محلياً</div>
+
+    <!-- التبويبات -->
+    <div class="tabs">
+        <button class="tab active" data-tab="shorten">✂️ اختصار</button>
+        <button class="tab" data-tab="stats">📊 الإحصائيات</button>
+    </div>
+
+    <!-- لوحة الاختصار -->
+    <div id="shorten-panel" class="panel active">
+        <div class="input-group">
+            <label>الرابط الطويل</label>
+            <input type="url" id="originalUrl" placeholder="https://example.com/..." value="">
+        </div>
+        <button class="btn" id="shortenBtn">اختصر الآن</button>
+
+        <div id="resultArea" style="display: none;">
+            <div class="result-box">
+                <div style="font-weight: 600; margin-bottom: 6px;">✅ تم إنشاء الرابط القصير</div>
+                <div id="shortUrlDisplay" class="short-link"></div>
+                <button class="copy-btn" id="copyBtn">📋 نسخ الرابط</button>
+                <p style="margin-top: 12px; font-size: 14px; color: #475569;">⚡ عند فتح الرابط سيتم توجيهك وزيادة العداد.</p>
+            </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 14px; color: #64748b;">* الروابط محفوظة على جهازك فقط.</p>
+    </div>
+
+    <!-- لوحة الإحصائيات -->
+    <div id="stats-panel" class="panel">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 18px;">📋 جميع الروابط</h3>
+            <button class="copy-btn" id="clearAllBtn" style="margin:0; padding:6px 14px; font-size:14px;">🗑️ حذف الكل</button>
+        </div>
+        <div id="statsContainer">
+            <!-- يتم تعبئتها عبر JS -->
+        </div>
+    </div>
+    <div class="footer-note">
+        يعمل بدون إنترنت · البيانات في متصفحك
+    </div>
+</div>
+
+<script>
+    (function(){
+        "use strict";
+
+        // ---------- إدارة التخزين ----------
+        const STORAGE_KEY = 'mobile_shortener_db';
+
+        // هيكل البيانات: { "abc123": { url: "https://...", clicks: 0 } }
+        function loadData() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            return stored ? JSON.parse(stored) : {};
+        }
+
+        function saveData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        // توليد كود عشوائي (6 أحرف)
+        function generateCode(len = 6) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let code = '';
+            for (let i = 0; i < len; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        // الحصول على رابط قصير كامل (مع بارامتر)
+        function getFullShortUrl(code) {
+            const base = window.location.href.split('?')[0].split('#')[0];
+            return base + '?c=' + code;
+        }
+
+        // ---------- التعامل مع إعادة التوجيه عند التحميل ----------
+        function handleRedirect() {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get('c');
+            if (!code) return false;
+
+            const data = loadData();
+            if (data[code]) {
+                // زيادة النقرات
+                data[code].clicks = (data[code].clicks || 0) + 1;
+                saveData(data);
+                // إعادة التوجيه
+                window.location.href = data[code].url;
+                return true;
+            }
+            // كود غير صحيح -> لا نفعل شيئاً
+            return false;
+        }
+
+        // إذا كان هناك إعادة توجيه، ننفذها فوراً قبل عرض الواجهة
+        if (handleRedirect()) {
+            // منع أي عرض إضافي (سيتم التوجيه)
+            throw new Error('Redirecting...'); // إيقاف التنفيذ
+        }
+
+        // ---------- تحديث واجهة الإحصائيات ----------
+        function renderStats() {
+            const container = document.getElementById('statsContainer');
+            const data = loadData();
+            const entries = Object.entries(data);
+
+            if (entries.length === 0) {
+                container.innerHTML = '<div class="empty-message">✨ لا توجد روابط مختصرة بعد</div>';
+                return;
+            }
+
+            // ترتيب تنازلي حسب النقرات
+            entries.sort((a, b) => b[1].clicks - a[1].clicks);
+
+            let html = `
+                <table>
+                    <thead>
+                        <tr><th>الكود</th><th>الرابط الأصلي</th><th>النقرات</th><th></th></tr>
+                    </thead>
+                    <tbody>
+            `;
+            for (let [code, info] of entries) {
+                const shortDisplay = getFullShortUrl(code);
+                // اختصار النص المعروض
+                let urlPreview = info.url;
+                try {
+                    const u = new URL(info.url);
+                    urlPreview = u.hostname + (u.pathname.length > 1 ? u.pathname.substring(0,15)+'…' : '');
+                } catch(e) { /* keep */ }
+                html += `
+                    <tr>
+                        <td><span class="link-code">${code}</span></td>
+                        <td><div class="url-preview" title="${info.url.replace(/"/g, '&quot;')}">${urlPreview}</div></td>
+                        <td style="font-weight:600;">${info.clicks || 0}</td>
+                        <td><button class="delete-btn" data-code="${code}" title="حذف">🗑️</button></td>
+                    </tr>
+                `;
+            }
+            html += '</tbody></table>';
+            container.innerHTML = html;
+
+            // إضافة مستمعات لأزرار الحذف
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const code = btn.dataset.code;
+                    if (code && confirm('حذف الرابط المختصر "'+code+'"؟')) {
+                        const currentData = loadData();
+                        delete currentData[code];
+                        saveData(currentData);
+                        renderStats();
+                        // إذا كنا في لوحة الإحصائيات فقط نعيد عرضها
+                    }
+                });
+            });
+        }
+
+        // حذف جميع الروابط
+        function clearAllLinks() {
+            if (confirm('هل أنت متأكد من حذف جميع الروابط المختصرة؟')) {
+                saveData({});
+                renderStats();
+            }
+        }
+
+        // ---------- واجهة الاختصار ----------
+        const shortenBtn = document.getElementById('shortenBtn');
+        const originalInput = document.getElementById('originalUrl');
+        const resultArea = document.getElementById('resultArea');
+        const shortUrlDisplay = document.getElementById('shortUrlDisplay');
+        const copyBtn = document.getElementById('copyBtn');
+
+        function shortenUrl() {
+            let url = originalInput.value.trim();
+            if (!url) {
+                alert('الرجاء إدخال رابط');
+                return;
+            }
+            // إضافة بروتوكول إذا لم يكن موجوداً
+            if (!/^https?:\/\//i.test(url)) {
+                url = 'https://' + url;
+            }
+            // التحقق بسيط
+            try {
+                new URL(url);
+            } catch (e) {
+                alert('رابط غير صالح');
+                return;
+            }
+
+            const data = loadData();
+            // البحث إذا كان الرابط موجود مسبقاً (اختياري: نعيد نفس الكود)
+            let existingCode = null;
+            for (let [code, info] of Object.entries(data)) {
+                if (info.url === url) {
+                    existingCode = code;
+                    break;
+                }
+            }
+
+            let code;
+            if (existingCode) {
+                code = existingCode;
+            } else {
+                // توليد كود غير مستخدم
+                do {
+                    code = generateCode(6);
+                } while (data[code]);
+                data[code] = { url: url, clicks: 0 };
+                saveData(data);
+            }
+
+            const fullShort = getFullShortUrl(code);
+            shortUrlDisplay.textContent = fullShort;
+            resultArea.style.display = 'block';
+
+            // تحديث الإحصائيات في الخلفية
+            if (document.getElementById('stats-panel').classList.contains('active')) {
+                renderStats();
+            }
+
+            // مسح الإدخال اختياري
+            // originalInput.value = '';
+        }
+
+        shortenBtn.addEventListener('click', shortenUrl);
+        originalInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') shortenUrl();
+        });
+
+        // نسخ الرابط
+        copyBtn.addEventListener('click', () => {
+            const text = shortUrlDisplay.textContent;
+            navigator.clipboard?.writeText(text).then(() => {
+                copyBtn.textContent = '✅ تم النسخ!';
+                setTimeout(() => copyBtn.textContent = '📋 نسخ الرابط', 1500);
+            }).catch(() => {
+                // fallback
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                copyBtn.textContent = '✅ تم النسخ!';
+                setTimeout(() => copyBtn.textContent = '📋 نسخ الرابط', 1500);
+            });
+        });
+
+        // ---------- التبويبات ----------
+        const tabs = document.querySelectorAll('.tab');
+        const panels = {
+            shorten: document.getElementById('shorten-panel'),
+            stats: document.getElementById('stats-panel')
+        };
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+                // تفعيل التبويب
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                // إظهار اللوحة
+                Object.values(panels).forEach(p => p.classList.remove('active'));
+                panels[target].classList.add('active');
+
+                if (target === 'stats') {
+                    renderStats();
+                }
+            });
+        });
+
+        // زر حذف الكل
+        document.getElementById('clearAllBtn').addEventListener('click', clearAllLinks);
+
+        // تحميل أولي للإحصائيات (في الخلفية)
+        // إذا فتح المستخدم الإحصائيات مباشرة، نعدلها
+
+        // إظهار الإحصائيات إذا كان التبويب نشطاً عند التحميل (اختياري)
+        // لكن عادةً التبويب الافتراضي هو الاختصار
+        // مع ذلك نعد جدول الإحصائيات مرة واحدة
+        renderStats();
+
+        // التعامل مع فتح رابط قصير مباشرة (إذا تم استخدام بارامتر c)
+        // تم التعامل معه في الأعلى قبل عرض الصفحة
+    })();
+</script>
+</body>
+</html>
